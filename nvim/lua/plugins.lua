@@ -31,6 +31,13 @@ return require('packer').startup({
     use 'L3MON4D3/LuaSnip'
     use 'saadparwaiz1/cmp_luasnip'
     use 'rafamadriz/friendly-snippets'
+    use {
+      's1n7ax/nvim-terminal',
+      config = function()
+        vim.o.hidden = true
+        require('nvim-terminal').setup()
+      end,
+    }
   end,
   config = {
     display = {
