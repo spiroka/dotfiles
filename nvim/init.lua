@@ -20,6 +20,26 @@ vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.completeopt = 'menu,menuone,noselect'
 
+-- Mappings
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+
+-- Use an on_attach function to only map the following keys after the language server attaches to the current buffer
+local on_attach = function(_, bufnr)
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+end
+
 -- LSP setup
 local lsp_defaults = lspconfig.util.default_config
 lsp_defaults.capabilities = vim.tbl_deep_extend(
@@ -28,7 +48,8 @@ lsp_defaults.capabilities = vim.tbl_deep_extend(
   require('cmp_nvim_lsp').default_capabilities()
 )
 
-lspconfig.sumneko_lua.setup {
+lspconfig.sumneko_lua.setup({
+  on_attach = on_attach,
   settings = {
     Lua = {
       runtime = {
@@ -49,11 +70,19 @@ lspconfig.sumneko_lua.setup {
       },
     },
   },
-}
-lspconfig.tsserver.setup({})
-lspconfig.stylelint_lsp.setup({})
-lspconfig.emmet_ls.setup({})
-lspconfig.eslint.setup({})
+})
+lspconfig.tsserver.setup({
+  on_attach = on_attach,
+})
+lspconfig.stylelint_lsp.setup({
+  on_attach = on_attach,
+})
+lspconfig.emmet_ls.setup({
+  on_attach = on_attach,
+})
+lspconfig.eslint.setup({
+  on_attach = on_attach,
+})
 
 -- Ayu theme setup
 require('ayu').setup({
@@ -112,6 +141,22 @@ cmp.setup({
           else
             cmp.confirm()
           end
+        elseif luasnip.jumpable() then
+          luasnip.jump(1)
+        else
+          fallback()
+        end
+      end, {"i","s","c",}),
+      ['<S-Tab>'] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          local entry = cmp.get_selected_entry()
+          if not entry then
+            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+          else
+            cmp.confirm()
+          end
+        elseif luasnip.jumpable() then
+          luasnip.jump(-1)
         else
           fallback()
         end
