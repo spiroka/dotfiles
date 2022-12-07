@@ -9,7 +9,9 @@ return require('packer').startup({
   function(use)
     use 'wbthomason/packer.nvim' -- Packer plugin manager
     use 'neovim/nvim-lspconfig' -- Configurations for NVim LSP
-    use 'm4xshen/autoclose.nvim' -- Auto close bracket, quotes, etc...
+    use 'nvim-treesitter/nvim-treesitter'
+    use 'windwp/nvim-autopairs' -- Auto close bracket, quotes, etc...
+    use 'windwp/nvim-ts-autotag' -- Use treesitter to autoclose and autorename html tag
     use 'Shatur/neovim-ayu' -- Ayu theme
     use {
       'nvim-lualine/lualine.nvim',
@@ -21,7 +23,7 @@ return require('packer').startup({
     }
     use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
     use 'tpope/vim-vinegar'
-    use "glench/vim-jinja2-syntax"
+    use 'glench/vim-jinja2-syntax'
     use 'hrsh7th/nvim-cmp'
     use 'hrsh7th/vim-vsnip-integ'
     use 'hrsh7th/cmp-nvim-lsp'
@@ -38,6 +40,9 @@ return require('packer').startup({
         require('nvim-terminal').setup()
       end,
     }
+    use 'virchau13/tree-sitter-astro'
+    use 'folke/tokyonight.nvim'
+    use 'bluz71/vim-nightfly-colors'
   end,
   config = {
     display = {
