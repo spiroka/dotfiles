@@ -19,11 +19,19 @@ vim.opt.list = true
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.completeopt = 'menu,menuone,noselect'
+vim.opt.termguicolors = true
 
 -- Mappings
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
 vim.keymap.set('t', '<Esc>',  '<C-\\><C-n>', opts)
+
+-- Set filetype for .astro files
+vim.filetype.add({
+  extension = {
+    astro = 'astro'
+  }
+})
 
 -- Use an on_attach function to only map the following keys after the language server attaches to the current buffer
 local on_attach = function(_, bufnr)
@@ -84,17 +92,40 @@ lspconfig.emmet_ls.setup({
 lspconfig.eslint.setup({
   on_attach = on_attach,
 })
-
--- Ayu theme setup
-require('ayu').setup({
-  mirage = true
+lspconfig.astro.setup({
+  on_attach = on_attach,
 })
-vim.cmd 'colorscheme ayu'
+lspconfig.cssls.setup({
+  on_attach = on_attach,
+  settings = {
+    css = {
+      validate = false, -- Don't validate CSS. PostCSS is not considered valid by the language server. Snippets still work.
+    }
+  }
+})
+
+-- TreeSitter setup
+require('nvim-treesitter.configs').setup({
+  ensure_installed = { 'javascript', 'tsx', 'typescript', 'astro', 'css' },
+  autotag = {
+    enable = true
+  },
+  highlight = {
+    enable = true,
+    disable = { 'lua' }
+  }
+})
+
+-- Theme setup
+-- require('ayu').setup({
+--   mirage = true
+-- })
+vim.cmd('colorscheme nightfly')
 
 -- Lualine setup
 require('lualine').setup({
   options = {
-    theme = 'ayu_mirage',
+    theme = 'nightfly',
   },
   sections = {
     lualine_a = {'mode'},
@@ -107,12 +138,27 @@ require('lualine').setup({
 })
 
 -- Telescope setup
-telescope.setup()
+telescope.setup({
+  pickers = {
+    buffers = {
+      mappings = {
+        i = {
+          ['<c-d>'] = 'delete_buffer'
+        }
+      }
+    }
+  }
+})
 telescope.load_extension('fzf')
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 vim.keymap.set('n', '<C-b>', builtin.buffers, {})
 vim.keymap.set('n', '<C-f>', builtin.live_grep, {})
+
+-- autopairs setup
+require('nvim-autopairs').setup({
+  ignored_next_char = "[%w%.]"
+})
 
 -- nvim-cmp setup
 require('luasnip.loaders.from_vscode').lazy_load()
@@ -134,6 +180,7 @@ cmp.setup({
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm(),
       ['<Tab>'] = cmp.mapping(function(fallback)
         if cmp.visible() then
           local entry = cmp.get_selected_entry()
@@ -163,4 +210,18 @@ cmp.setup({
         end
       end, {"i","s","c",})
   }),
+})
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(), -- important!
+  sources = {
+    { name = 'nvim_lua' },
+    { name = 'cmdline' },
+    { name = 'path' }
+  },
+})
+cmp.setup.cmdline('/', {
+  mapping = cmp.mapping.preset.cmdline(), -- important!
+  sources = {
+    { name = 'buffer' },
+  },
 })
