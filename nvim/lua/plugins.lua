@@ -12,7 +12,6 @@ return require('packer').startup({
     use 'nvim-treesitter/nvim-treesitter'
     use 'windwp/nvim-autopairs' -- Auto close bracket, quotes, etc...
     use 'windwp/nvim-ts-autotag' -- Use treesitter to autoclose and autorename html tag
-    use 'Shatur/neovim-ayu' -- Ayu theme
     use {
       'nvim-lualine/lualine.nvim',
       requires = { 'kyazdani42/nvim-web-devicons', opt = true }
@@ -41,8 +40,10 @@ return require('packer').startup({
       end,
     }
     use 'virchau13/tree-sitter-astro'
-    use 'folke/tokyonight.nvim'
-    use 'bluz71/vim-nightfly-colors'
+    use { 'catppuccin/nvim', as = 'catppuccin' }
+    use 'lukas-reineke/indent-blankline.nvim'
+    use 'williamboman/mason.nvim'
+    use 'williamboman/mason-lspconfig.nvim'
   end,
   config = {
     display = {
