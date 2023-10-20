@@ -56,6 +56,12 @@ local on_attach = function(_, bufnr)
   vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
 
+-- Mason
+require('mason').setup()
+require('mason-lspconfig').setup {
+  ensure_installed = { 'lua_ls', 'tsserver', 'stylelint_lsp', 'emmet_ls', 'eslint', 'astro', 'cssls' }
+}
+
 -- LSP setup
 local lsp_defaults = lspconfig.util.default_config
 lsp_defaults.capabilities = vim.tbl_deep_extend(
@@ -92,6 +98,7 @@ lspconfig.tsserver.setup({
 })
 lspconfig.stylelint_lsp.setup({
   on_attach = on_attach,
+  filetypes = { 'css', 'less', 'scss' }
 })
 lspconfig.emmet_ls.setup({
   on_attach = on_attach,
@@ -123,16 +130,12 @@ require('nvim-treesitter.configs').setup({
   }
 })
 
--- Theme setup
--- require('ayu').setup({
---   mirage = true
--- })
-vim.cmd('colorscheme nightfly')
+vim.cmd('colorscheme catppuccin')
 
 -- Lualine setup
 require('lualine').setup({
   options = {
-    theme = 'nightfly',
+    theme = 'catppuccin',
   },
   sections = {
     lualine_a = {'mode'},
@@ -146,6 +149,18 @@ require('lualine').setup({
 
 -- Telescope setup
 telescope.setup({
+  defaults = {
+    vimgrep_arguments = {
+      "rg",
+      "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+      "--fixed-strings"
+    }
+  },
   pickers = {
     buffers = {
       mappings = {
@@ -156,7 +171,6 @@ telescope.setup({
     }
   }
 })
-telescope.load_extension('fzf')
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 vim.keymap.set('n', '<C-b>', builtin.buffers, {})
@@ -169,6 +183,21 @@ require('nvim-autopairs').setup({
 
 -- nvim-cmp setup
 require('luasnip.loaders.from_vscode').lazy_load()
+
+function leave_snippet()
+  if
+    ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
+      and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
+      and not require('luasnip').session.jump_active
+  then
+    require('luasnip').unlink_current()
+  end
+end
+
+-- stop snippets when you leave to normal mode
+vim.api.nvim_command([[
+  autocmd ModeChanged * lua leave_snippet()
+]])
 
 cmp.setup({
   snippet = {
@@ -232,3 +261,5 @@ cmp.setup.cmdline('/', {
     { name = 'buffer' },
   },
 })
+
+require('indent_blankline').setup({})
