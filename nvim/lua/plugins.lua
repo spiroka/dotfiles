@@ -17,7 +17,7 @@ return require('packer').startup({
       requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
     use {
-      'nvim-telescope/telescope.nvim', tag = '0.1.x',
+      'nvim-telescope/telescope.nvim', tag = '0.1.4',
       requires = { {'nvim-lua/plenary.nvim'} }
     }
     use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
