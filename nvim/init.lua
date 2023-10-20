@@ -70,7 +70,7 @@ lsp_defaults.capabilities = vim.tbl_deep_extend(
   require('cmp_nvim_lsp').default_capabilities()
 )
 
-lspconfig.sumneko_lua.setup({
+lspconfig.lua_ls.setup({
   on_attach = on_attach,
   settings = {
     Lua = {
@@ -262,4 +262,4 @@ cmp.setup.cmdline('/', {
   },
 })
 
-require('indent_blankline').setup({})
+require('ibl').setup()
