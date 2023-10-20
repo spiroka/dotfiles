@@ -17,9 +17,16 @@ vim.opt.cursorline = true
 vim.opt.hlsearch = false
 vim.opt.list = true
 vim.opt.autoindent = true
-vim.opt.smartindent = true
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.termguicolors = true
+vim.filetype.indent = true
+
+-- Don't allow arrow keys in the following modes
+for _, mode in pairs({ 'n', 'v', 'x' }) do
+  for _, key in pairs({ '<Up>', '<Down>', '<Left>', '<Right>' }) do
+    vim.keymap.set(mode, key, '<nop>')
+  end
+end
 
 -- Mappings
 local opts = { noremap=true, silent=true }
