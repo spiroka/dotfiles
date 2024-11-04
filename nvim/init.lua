@@ -194,6 +194,10 @@ function leave_snippet()
   end
 end
 
+
+-- netrw setup
+require('netrw').setup({})
+
 -- stop snippets when you leave to normal mode
 vim.api.nvim_command([[
   autocmd ModeChanged * lua leave_snippet()
