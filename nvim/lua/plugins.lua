@@ -44,6 +44,7 @@ return require('packer').startup({
     use 'lukas-reineke/indent-blankline.nvim'
     use 'williamboman/mason.nvim'
     use 'williamboman/mason-lspconfig.nvim'
+    use 'prichrd/netrw.nvim'
   end,
   config = {
     display = {
