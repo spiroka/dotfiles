@@ -117,6 +117,15 @@ lspconfig.emmet_ls.setup({
 })
 lspconfig.eslint.setup({
   on_attach = on_attach,
+  on_new_config = function(config, new_root_dir)
+    config.settings.workspaceFolder = {
+      uri = vim.uri_from_fname(new_root_dir)
+      name = vim.fn.fnamemodify(new_root_dir, ':t')
+    }
+  end,
+  settings = {
+    useFlatConfig = true
+  }
 })
 lspconfig.astro.setup({
   on_attach = on_attach,
@@ -142,7 +151,7 @@ require('nvim-treesitter.configs').setup({
   }
 })
 
-vim.cmd('colorscheme catppuccin-frappe')
+vim.cmd('colorscheme catppuccin-mocha')
 
 -- Lualine setup
 require('lualine').setup({
@@ -154,7 +163,9 @@ require('lualine').setup({
     lualine_b = {'branch', 'diff', 'diagnostics'},
     lualine_c = {'filename'},
     lualine_x = {},
-    lualine_y = {},
+    lualine_y = {
+      { 'datetime', style = '%H:%M' }
+    },
     lualine_z = {'location'}
   }
 })
@@ -180,6 +191,9 @@ telescope.setup({
           ['<c-d>'] = 'delete_buffer'
         }
       }
+    },
+    diagnostics = {
+      bufnr = 0
     }
   }
 })
@@ -187,6 +201,7 @@ local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 vim.keymap.set('n', '<C-b>', builtin.buffers, {})
 vim.keymap.set('n', '<C-f>', builtin.live_grep, {})
+vim.keymap.set('n', '<C-q>', builtin.diagnostics, {})
 
 -- autopairs setup
 require('nvim-autopairs').setup({
