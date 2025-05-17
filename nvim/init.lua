@@ -28,6 +28,13 @@ for _, mode in pairs({ 'n', 'v', 'x' }) do
   end
 end
 
+-- Disable virtual_text since it's redundant due to lsp_lines.
+vim.diagnostic.config({
+  virtual_text = false,
+})
+
+vim.diagnostic.config({ virtual_lines = { only_current_line = true } })
+
 -- Mappings
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
@@ -95,6 +102,11 @@ lspconfig.lua_ls.setup({
 })
 lspconfig.tsserver.setup({
   on_attach = on_attach,
+  init_options = {
+    preferences = {
+      quotePreference = 'single'
+    }
+  }
 })
 lspconfig.stylelint_lsp.setup({
   on_attach = on_attach,
@@ -130,7 +142,7 @@ require('nvim-treesitter.configs').setup({
   }
 })
 
-vim.cmd('colorscheme catppuccin')
+vim.cmd('colorscheme catppuccin-frappe')
 
 -- Lualine setup
 require('lualine').setup({
