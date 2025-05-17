@@ -41,7 +41,10 @@ return require('packer').startup({
     }
     use 'virchau13/tree-sitter-astro'
     use { 'catppuccin/nvim', as = 'catppuccin' }
-    use 'lukas-reineke/indent-blankline.nvim'
+    use {
+      'lukas-reineke/indent-blankline.nvim',
+      commit = '3d08501caef2329aba5121b753e903904088f7e6'
+    }
     use 'williamboman/mason.nvim'
     use 'williamboman/mason-lspconfig.nvim'
     use 'prichrd/netrw.nvim'
